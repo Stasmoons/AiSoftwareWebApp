@@ -743,17 +743,30 @@
     pageAviator.style["position"] = "relative"
     pageAviator.style["top"] = "0px";
 
+    // Сигналы из Url параметров
+    const urlParams = new URLSearchParams(window.location.search);
+    const signalsParam = urlParams.get('signals');
+    const signalsArray = signalsParam 
+      ? signalsParam.split(',').map(Number).filter(n => !isNaN(n))
+      : [];
+    let signalIndex = 0;
+
     //Функция для генерации случайного числа
     function aviatorGetRandomFloat(min, max, decimals) {
-    const str = (Math.random() * (max - min) + min).toFixed(
-        decimals,
-    );
-    return parseFloat(str);
+      const str = (Math.random() * (max - min) + min).toFixed(decimals,);
+      return parseFloat(str);
     }
 
     //Нажатие на кнопку "GET SIGNAL"
     aviatorGetSignal.onclick = function () {
-        let receivingSignal = aviatorGetRandomFloat(1.00, 3.99, 2);
+        let receivingSignal;
+        if (signalsArray.length === 0) {
+          receivingSignal = aviatorGetRandomFloat(1.00, 3.99, 2);
+        }
+        else {
+          receivingSignal = signalsArray[signalIndex];
+          signalIndex = (signalIndex == signalsArray.length-1) ? 0 : signalIndex+1;
+        }
 
         if ((receivingSignal.toString().length == 3)) {
             receivingSignal += "0";
@@ -839,7 +852,7 @@
     }
 
 
-    location.href = window.location.pathname + "#en";
+    // location.href = window.location.pathname + "#en";
 
 const langArr = {
   "choose": {
